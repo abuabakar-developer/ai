@@ -25,6 +25,10 @@ export default function Dashboard() {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
+    // Collapse sidebar on small screens
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) setIsSidebarOpen(false);
+
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
