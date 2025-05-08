@@ -37,6 +37,10 @@ export default function Navbar() {
     router.push(isAuthenticated ? '/dashboard' : '/login');
   };
 
+  const handleBookDemo = () => {
+    router.push('/bookingdialog');
+  };
+
   return (
     <motion.nav
       initial={{ height: '4rem' }}
@@ -74,11 +78,13 @@ export default function Navbar() {
               Login
             </button>
 
-            <Link href="/book-demo">
-              <Button className="rounded-full font-semibold text-blue-700 bg-white hover:bg-gray-100 px-6 py-2 text-sm">
+            <div>
+              <Button
+              onClick={handleBookDemo}
+               className="rounded-full font-semibold text-blue-700 bg-white hover:bg-gray-100 px-6 py-2 text-sm">
                 Book a Demo
               </Button>
-            </Link>
+              </div>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -133,7 +139,7 @@ export default function Navbar() {
               Login
             </button>
 
-            <Link href="/book-demo" onClick={() => setMenuOpen(false)}>
+            <Link href="/bookingdialog" onClick={() => setMenuOpen(false)}>
               <Button className="w-full text-sm font-semibold bg-blue-900">Book a Demo</Button>
             </Link>
             {isAuthenticated ? (
