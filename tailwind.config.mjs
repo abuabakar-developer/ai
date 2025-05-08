@@ -14,6 +14,7 @@ export default {
         'bounce-delay-2': 'bounceDelay 1.2s infinite 0.2s',
         'bounce-delay-3': 'bounceDelay 1.2s infinite 0.4s',
       },
+  
       keyframes: {
         fadeIn: {
           '0%': { opacity: 0 },

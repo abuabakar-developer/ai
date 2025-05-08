@@ -35,7 +35,7 @@ export default function BookingPage() {
       const [hours, minutes] = time.split(':').map(Number);
       const dateWithTime = new Date(selectedDate);
       dateWithTime.setHours(hours, minutes, 0, 0);
-      router.push(`/booking/confirm?date=${dateWithTime.toISOString()}`);
+      router.push(`/bookingdialog/confirm?date=${dateWithTime.toISOString()}`);
     }
   };
 

@@ -1,3 +1,4 @@
+// app/booking/confirm/page.tsx
 import { Suspense } from 'react';
 import ConfirmContent from '@/app/components/ConfirmContent';
 
