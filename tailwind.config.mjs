@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class', // ✅ Enable dark mode using class strategy
+  darkMode: false, // ❌ Disable all dark mode behavior
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
@@ -14,7 +14,6 @@ export default {
         'bounce-delay-2': 'bounceDelay 1.2s infinite 0.2s',
         'bounce-delay-3': 'bounceDelay 1.2s infinite 0.4s',
       },
-  
       keyframes: {
         fadeIn: {
           '0%': { opacity: 0 },
