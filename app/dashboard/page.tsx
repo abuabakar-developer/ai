@@ -17,7 +17,7 @@ import ChatbotModal from '../components/ChatbotModal';
 import ChatbotList from '../components/ChatbotList';
 import ModernSpinner from '../components/ModernSpinner';
 
-interface Chatbot {
+interface Chatbot {  
   _id: string;
   name: string;
   url: string;
@@ -156,7 +156,7 @@ export default function Dashboard() {
     <div className={`flex flex-col h-full bg-gradient-to-b from-blue-950 to-blue-900 text-white transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'} shadow-2xl`}>
       <div className="flex items-center justify-between p-4 border-b border-blue-800 sticky top-0 bg-blue-950 z-10">
         {!isSidebarCollapsed ? (
-          <h2 className="text-2xl font-bold tracking-tight">Talksy</h2>
+          <h2 className="text-2xl font-bold tracking-tight">💬Talksy</h2>
         ) : (
           <span className="text-xl font-bold">T</span>
         )}
@@ -178,35 +178,41 @@ export default function Dashboard() {
           </li>
         ))}
       </ul>
-      <div className="mt-auto p-4 border-t border-blue-800" ref={dropdownRef}>
-        {!isSidebarCollapsed ? (
-          <div className="relative">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="text-sm w-full text-left truncate hover:text-blue-200"
-            >
-              {email}
-            </button>
-            {showDropdown && (
-              <div className="absolute bottom-full right-0 bg-white text-black border shadow-lg rounded-md mt-2 z-50 w-40">
-                <button
-                  onClick={handleLogout}
-                  className="w-full px-4 py-2 flex items-center gap-2 hover:bg-gray-100"
-                >
-                  <FiLogOut /> Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className="w-full flex justify-center hover:text-red-400"
-            title="Logout"
-          >
-            <FiLogOut size={20} />
-          </button>
-        )}
+      <div className="mt-10 p-4 border-t border-blue-800" ref={dropdownRef}>
+{!isSidebarCollapsed ? (
+  <div className="relative">
+    <button
+      onClick={() => setShowDropdown(!showDropdown)}
+      className="text-sm w-full text-left truncate hover:text-blue-200"
+    >       
+      {email}
+    </button>
+    {showDropdown && (
+      <div className="absolute bottom-full right-0 mb-2 bg-white text-black border shadow-lg rounded-md z-50 w-48">
+        <div className="px-4 py-2 text-sm text-gray-500 border-b">Signed in as</div>
+        <div className="px-4 py-2 text-sm truncate font-medium text-blue-600 border-b">
+          {email}
+        </div>
+        <button
+          onClick={handleLogout}
+          className="w-full px-4 py-2 flex items-center gap-2 text-red-600 hover:bg-gray-100"
+        >
+          <FiLogOut /> Logout
+        </button>
+      </div>
+    )}
+  </div>
+) : (
+  <button
+    onClick={handleLogout}
+    className="w-full flex justify-center hover:text-red-400"
+    title="Logout"
+  >
+    <FiLogOut size={20} />
+  </button>
+)}
+
+
       </div>
     </div>
   );
