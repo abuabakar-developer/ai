@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
-import { Button } from './ui/button';
+import { Menu } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Navbar() {
@@ -41,22 +40,24 @@ export default function Navbar() {
     router.push('/bookingdialog');
   };
 
+  const scrollToFeatures = () => {
+    const section = document.getElementById('features');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+    setMenuOpen(false);
+  };
+
   return (
     <motion.nav
       initial={{ height: '4rem' }}
-      animate={{ height: isScrolled ? '3.5rem' : '4rem' }}
+      animate={{ height: isScrolled ? '3.25rem' : '4rem' }}
       transition={{ duration: 0.3 }}
-      className={`fixed top-0 left-0 w-full z-50 bg-blue-950/80 backdrop-blur-md transition-all duration-300 ${
-        isScrolled ? 'shadow-lg' : ''
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-blue-900 via-blue-950 to-blue-900 backdrop-blur-lg transition-all duration-300 ${isScrolled ? 'shadow-xl' : ''}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
         <div className="flex justify-between items-center h-full">
-          {/* Logo */}
-          <Link
-            href="/"
-            className="text-2xl font-bold text-white hover:text-blue-300 transition"
-          >
+          <Link href="/" className="text-2xl font-bold text-white hover:text-blue-300 transition tracking-wide">
             💬 Talksy AI
           </Link>
 
@@ -64,38 +65,30 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <NavLink href="/" label="Home" />
             <NavLink href="/pricing" label="Pricing" />
-            <NavLink href="/features" label="Features" />
+            <UnderlineButton onClick={scrollToFeatures} label="Features" />
             {isAuthenticated ? (
               <NavLink href="/dashboard" label="Dashboard" />
             ) : (
               <NavLink href="/register" label="Get Started" />
             )}
-
+            <UnderlineButton onClick={handleLoginClick} label="Login" />
             <button
-              onClick={handleLoginClick}
-              className="text-white font-medium hover:text-blue-300 transition"
-            >
-              Login
-            </button>
-
-            <div>
-              <Button
               onClick={handleBookDemo}
-               className="rounded-full font-semibold text-blue-700 bg-white hover:bg-gray-100 px-6 py-2 text-sm">
-                Book a Demo
-              </Button>
-              </div>
+              className="bg-white text-blue-800 font-semibold px-6 py-2 text-sm rounded-full shadow hover:border hover:border-blue-800 hover:text-blue-800 transition"
+            >
+              Book a Demo
+            </button>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Hamburger */}
           <div className="md:hidden">
             <motion.button
-              whileTap={{ scale: 0.95 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setMenuOpen(!menuOpen)}
-              className="text-white p-3 rounded-full focus:outline-none transition hover:bg-white/10"
+              className="text-white p-2 rounded-lg hover:bg-white/10 focus:outline-none transition"
               aria-label="Toggle menu"
             >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+              <Menu size={26} />
             </motion.button>
           </div>
         </div>
@@ -109,52 +102,44 @@ export default function Navbar() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -50, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden fixed top-16 left-0 w-full bg-blue-950/90 backdrop-blur-md z-40 px-6 py-8 flex flex-col gap-6"
+            className="md:hidden fixed top-16 left-0 w-full bg-blue-950/95 backdrop-blur-md z-40 px-6 py-6 flex flex-col gap-5 shadow-lg items-start"
           >
-            <NavLink
-              href="/"
-              label="Home"
-              onClick={() => setMenuOpen(false)}
-              className="text-lg"
-            />
-            <NavLink
-              href="/pricing"
-              label="Pricing"
-              onClick={() => setMenuOpen(false)}
-              className="text-lg"
-            />
-            <NavLink
-              href="/features"
-              label="Features"
-              onClick={() => setMenuOpen(false)}
-              className="text-lg"
-            />
-            <button
-              onClick={() => {
-                handleLoginClick();
-                setMenuOpen(false);
-              }}
-              className="text-white font-medium text-lg hover:text-blue-300"
-            >
-              Login
-            </button>
+            <NavLink href="/" label="Home" onClick={() => setMenuOpen(false)} className="text-lg" />
+            <NavLink href="/pricing" label="Pricing" onClick={() => setMenuOpen(false)} className="text-lg" />
+            <UnderlineButton onClick={() => {
+              scrollToFeatures();
+              setMenuOpen(false);
+            }} label="Features" className="text-lg" />
+            <UnderlineButton onClick={() => {
+              handleLoginClick();
+              setMenuOpen(false);
+            }} label="Login" className="text-lg" />
 
-            <Link href="/bookingdialog" onClick={() => setMenuOpen(false)}>
-              <Button className="w-full text-sm font-semibold bg-blue-900">Book a Demo</Button>
-            </Link>
-            {isAuthenticated ? (
-              <Link href="/dashboard" onClick={() => setMenuOpen(false)}>
-                <Button variant="outline" className="w-full text-sm font-semibold text-white hover:text-blue-800">
-                  Dashboard
-                </Button>
-              </Link>
-            ) : (
-              <Link href="/register" onClick={() => setMenuOpen(false)}>
-                <Button variant="outline" className="w-full text-sm">
-                  Get Started
-                </Button>
-              </Link>
-            )}
+            <div className="flex flex-row gap-4 w-full">
+              {isAuthenticated ? (
+                <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="w-full">
+                  <div className="text-white font-semibold text-center py-2 px-4 rounded-full border border-white hover:border-blue-400 hover:text-blue-800 hover:bg-white transition w-full">
+                    Dashboard
+                  </div>
+                </Link>
+              ) : (
+                <Link href="/register" onClick={() => setMenuOpen(false)} className="w-full">
+                  <div className="text-white text-center py-2 px-4 rounded-full border border-white hover:border-blue-400 hover:text-blue-400 hover-bg-white transition w-full">
+                    Get Started
+                  </div>
+                </Link>
+              )}
+
+              <button
+                onClick={() => {
+                  handleBookDemo();
+                  setMenuOpen(false);
+                }}
+                className="text-sm font-semibold bg-white text-blue-800 px-4 py-2 rounded-full hover:bg-blue-100 transition w-full text-center hover:border border-blue-800"
+              >
+                Book a Demo
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -162,6 +147,7 @@ export default function Navbar() {
   );
 }
 
+// ✅ NavLink
 function NavLink({
   href,
   label,
@@ -177,10 +163,31 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
-      className={`text-white font-medium hover:text-blue-300 transition ${className}`}
+      className={`group relative text-white font-medium transition duration-200 ${className}`}
     >
       {label}
+      <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out" />
     </Link>
   );
 }
 
+// ✅ UnderlineButton
+function UnderlineButton({
+  label,
+  onClick,
+  className = '',
+}: {
+  label: string;
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`group relative text-white font-medium transition duration-200 ${className}`}
+    >
+      {label}
+      <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300 ease-in-out" />
+    </button>
+  );
+}

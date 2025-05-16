@@ -8,7 +8,7 @@ const features = [
   {
     title: 'Rapid Response',
     desc: 'Super quick setup and lightning fast response is all it takes for Talksy AI chatbot to start handling your customer queries.',
-    image: '/chaats.png',
+    image: '/chaat.png',
   },
   {
     title: 'Customized Chatbot Widget',
@@ -66,7 +66,7 @@ const advancedFeatures = [
   },
 ];
 
-export default function ChatbotFeatures() {
+export default function ChatbotFeaturesPage() {
   const [activeFeature, setActiveFeature] = useState(features[0]);
   const leftRef = useRef<HTMLDivElement>(null);
   const [leftHeight, setLeftHeight] = useState<number | undefined>(undefined);
@@ -77,22 +77,10 @@ export default function ChatbotFeatures() {
       setLeftHeight(leftRef.current.offsetHeight);
     }
   }, [activeFeature]);
-  
-  useEffect(() => {
-  if (window.location.hash === '#features') {
-    const el = document.getElementById('features');
-    if (el) {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
-    }
-  }
-}, []);
-
 
   return (
     <>
-      <section id="features"  className="bg-white py-16 px-6 sm:px-12 md:px-16 lg:px-20">
+      <section id="features" className="bg-white py-16 px-6 sm:px-12 md:px-16 lg:px-20">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
             Build a Trustworthy <span className='text-blue-950'>AI Chatbot</span>
@@ -132,7 +120,6 @@ export default function ChatbotFeatures() {
             })}
           </div>
 
-          {/* Image Section Hidden on Small Screens */}
           <div
             className="hidden md:flex justify-center items-center"
             style={{ height: leftHeight ? `${leftHeight}px` : 'auto' }}
@@ -154,7 +141,6 @@ export default function ChatbotFeatures() {
         </div>
       </section>
 
-      {/* Powerful Features */}
       <section className="bg-white py-16 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6">
           {(showAll ? advancedFeatures : advancedFeatures.slice(0, 6)).map((feature, index) => (

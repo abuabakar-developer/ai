@@ -7,7 +7,10 @@ export async function POST(req: NextRequest) {
   const userId = req.headers.get("x-user-id");
 
   if (!message || !userId) {
-    return NextResponse.json({ error: "Message or user ID missing" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Message or user ID missing" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -32,7 +35,7 @@ export async function POST(req: NextRequest) {
     const data = await openaiRes.json();
     let reply = data.choices?.[0]?.message?.content || "Sorry, I didn’t get that.";
 
-    // Business-specific context if general knowledge question
+    // Check for general knowledge and enhance reply
     const isGeneralKnowledge = /capital|president|largest|who|when|where|what/i.test(message);
     if (isGeneralKnowledge) {
       reply += `
@@ -43,6 +46,14 @@ While I'm happy to answer general knowledge questions, I'm primarily here to hel
 
 Is there anything specific about Talksy or AI assistants for business that you'd like to know about?`;
     }
+
+    // Add final call-to-action line with separate paragraph styling
+    reply += `
+
+---
+
+👉 **Remember, you can click the "Book a Demo" button below to get started with scheduling your personalized demo session.**
+`;
 
     // Store bot's response
     await Message.create({ from: "bot", text: reply, userId });

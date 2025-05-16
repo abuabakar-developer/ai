@@ -22,6 +22,7 @@ export default function ClientWrapper() {
     pathname.startsWith('/login') ||
     pathname.startsWith('/register') ||
     pathname.startsWith('/reset-password')||
+    pathname.startsWith('/chatbots')||
     pathname.startsWith('/pricing');
 
   return (
@@ -48,6 +49,7 @@ export default function ClientWrapper() {
 
   {/* Show footer only if not on /dashboard */}
   {!pathname.startsWith('/dashboard') && <Footer />}
+  
       <Toaster position="top-right" />
     </>
   );

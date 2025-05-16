@@ -1,13 +1,14 @@
-import mongoose, { Schema, models } from 'mongoose';
+// models/File.ts
+import mongoose from 'mongoose';
 
-const FileSchema = new Schema({
-  name: String,
-  size: Number,
+const fileSchema = new mongoose.Schema({
+  fileName: String,
+  fileUrl: String,
   uploadedBy: String,
-  uploadedAt: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-export default models.File || mongoose.model('File', FileSchema);
+export default mongoose.models.File || mongoose.model('File', fileSchema);

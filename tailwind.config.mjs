@@ -22,6 +22,18 @@ export default {
         bounceDelay: {
           '0%, 80%, 100%': { transform: 'scale(0)' },
           '40%': { transform: 'scale(1)' },
+            animation: {
+        spin: 'spin 1.2s linear infinite',
+        pulse: 'pulse 2s ease-in-out infinite',
+        ping: 'ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite',
+      },
+          colors: {
+      primary: '#1e3a8a', // deep blue
+      accent: '#38bdf8',  // light blue
+    },
+    fontFamily: {
+      sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+    },
         },
       },
     },

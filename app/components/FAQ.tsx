@@ -46,6 +46,7 @@ const faqs = [
   },
 ];
 
+
 const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -54,8 +55,10 @@ const FAQ: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-16 px-6 md:px-20 lg:px-32">
-      <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-12">FAQ's of <span className='text-blue-950'>AI chatbot</span> for your website</h1>
+    <div id="faq-section" className="min-h-screen bg-gradient-to-b from-white to-gray-50 py-16 px-6 md:px-20 lg:px-32 scroll-mt-20">
+      <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-12">
+        FAQ's of <span className="text-blue-950">AI chatbot</span> for your website
+      </h1>
       <div className="space-y-6">
         {faqs.map((faq, index) => (
           <div

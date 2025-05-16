@@ -88,7 +88,7 @@ export default function KnowledgeBaseEditor({ email }: { email: string }) {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-semibold mb-4">Knowledge Base Editor</h2>
+      <h2 className="text-2xl font-semibold text-blue-800 mb-4">Knowledge Base Editor</h2>
 
       {/* Add Q&A */}
       <Card className="mb-6">

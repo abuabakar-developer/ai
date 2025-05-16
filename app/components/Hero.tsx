@@ -107,7 +107,7 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 pt-4">
               <button
                 onClick={handlePrimaryClick}
-                className="bg-blue-800 hover:bg-blue-900 text-white font-semibold px-6 py-3 rounded-full shadow-md transition-all duration-300 text-sm sm:text-base"
+                className="bg-blue-800 hover:bg-blue-50 hover:border border-blue-700 hover:text-blue-800 text-white font-semibold px-6 py-3 rounded-full shadow-md transition-all duration-300 text-sm sm:text-base"
               >
                 Create Your Chatbot
               </button>
@@ -138,7 +138,7 @@ export default function HeroSection() {
             <img
               src={heroData.imageUrl}
               alt="AI Chatbot Illustration"
-              className="w-72 sm:w-80 md:w-96 object-contain rounded-2xl shadow-xl"
+              className="w-72 sm:w-80 md:w-96 object-contain rounded-2xl"
             />
           </div>
         </div>

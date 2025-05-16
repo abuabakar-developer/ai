@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SendHorizonal, Mic, ThumbsUp, ThumbsDown, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -9,18 +9,31 @@ interface ChatbotProps {
   businessName?: string;
 }
 
+interface Message {
+  from: "user" | "bot";
+  text: string;
+}
+
 export default function Chatbot({
   primaryColor = "#3b82f6",
   welcomeMessage = "Hi! How can I help you today?",
   businessName = "Talksy AI",
 }: ChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([{ from: "bot", text: welcomeMessage }]);
+  const [messages, setMessages] = useState<Message[]>([{ from: "bot", text: welcomeMessage }]);
   const [input, setInput] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [showIcon, setShowIcon] = useState(false);
   const router = useRouter();
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Show chat icon after 4s
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowIcon(true);
@@ -28,10 +41,7 @@ export default function Chatbot({
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (isOpen) fetchChatHistory();
-  }, [isOpen]);
-
+  // Generate or get userId on mount
   useEffect(() => {
     let uid = localStorage.getItem("userId");
     if (!uid) {
@@ -40,56 +50,75 @@ export default function Chatbot({
     }
   }, []);
 
+  // Fetch chat history when chatbot opens
+  useEffect(() => {
+    if (isOpen) {
+      fetchChatHistory();
+    }
+  }, [isOpen]);
+
+  // Fetch chat history from MongoDB-backed API
   const fetchChatHistory = async () => {
     try {
       const userId = localStorage.getItem("userId");
+      if (!userId) return;
+
       const res = await fetch(`/api/chat/history?userId=${userId}`);
+      if (!res.ok) throw new Error("Failed to fetch chat history");
+
       const data = await res.json();
-      if (data.messages) setMessages(data.messages);
+      if (data.messages && Array.isArray(data.messages) && data.messages.length > 0) {
+        setMessages(data.messages);
+      } else {
+        setMessages([{ from: "bot", text: welcomeMessage }]);
+      }
     } catch (error) {
       console.error("Error fetching chat history:", error);
     }
   };
 
+  // Send user message to API and save chat to MongoDB
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessage = { from: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+    const userMessage: Message = { from: "user", text: input.trim() };
+
+    // Add user message and temporary bot typing
+    setMessages((prev) => [...prev, userMessage, { from: "bot", text: "typing-dots" }]);
     setInput("");
-    setMessages((prev) => [...prev, { from: "bot", text: "typing-dots" }]);
 
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = localStorage.getItem("userId") || "";
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-user-id": userId || "",
+          "x-user-id": userId,
         },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: userMessage.text }),
       });
+
+      if (!res.ok) throw new Error("Failed to get response");
 
       const data = await res.json();
       const botReply = data.reply || "Sorry, I couldn’t get that.";
 
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev.slice(0, -1),
-          { from: "bot", text: botReply },
-        ]);
-      }, 500);
+      // Replace typing-dots with bot reply
+      setMessages((prev) => [
+        ...prev.slice(0, -1),
+        { from: "bot", text: botReply },
+      ]);
     } catch (error) {
       console.error(error);
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev.slice(0, -1),
-          { from: "bot", text: "Error: Try again later." },
-        ]);
-      }, 500);
+      setMessages((prev) => [
+        ...prev.slice(0, -1),
+        { from: "bot", text: "Error: Try again later." },
+      ]);
     }
   };
 
+  // Voice recognition logic
   const startListening = () => {
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -122,7 +151,7 @@ export default function Chatbot({
   };
 
   const handleBookDemo = () => {
-    router.push('/bookingdialog');
+    router.push("/bookingdialog");
   };
 
   return (
@@ -131,6 +160,7 @@ export default function Chatbot({
         <button
           onClick={() => setIsOpen(true)}
           className="fixed bottom-4 right-4 p-4 rounded-full border-4 border-white shadow-xl text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:opacity-90 transition-all duration-300"
+          aria-label="Open Chatbot"
         >
           💬
         </button>
@@ -138,12 +168,15 @@ export default function Chatbot({
 
       {isOpen && (
         <div className="fixed inset-0 sm:inset-auto sm:bottom-4 sm:right-4 w-full h-full max-w-[430px] sm:h-[540px] sm:w-[430px] bg-white rounded-none sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
-          <div className="p-3 text-white font-semibold flex justify-between items-center bg-gradient-to-r from-blue-900 to-blue-950">
+          <div
+            className="p-3 text-white font-semibold flex justify-between items-center bg-gradient-to-r from-blue-900 to-blue-950"
+            style={{ backgroundColor: primaryColor }}
+          >
             <span>💬{businessName}</span>
             <button
               onClick={() => setIsOpen(false)}
               className="w-10 h-10 flex items-center justify-center text-white rounded-full hover:bg-white/10 transition-all duration-200 ease-in-out hover:scale-110 shadow-sm"
-              aria-label="Close"
+              aria-label="Close Chatbot"
             >
               <X className="w-5 h-5" />
             </button>
@@ -176,6 +209,7 @@ export default function Chatbot({
                       onClick={() => console.log("Liked message", i)}
                       className="hover:text-green-600 transition"
                       title="Like"
+                      aria-label="Like message"
                     >
                       <ThumbsUp size={16} />
                     </button>
@@ -183,6 +217,7 @@ export default function Chatbot({
                       onClick={() => console.log("Disliked message", i)}
                       className="hover:text-red-600 transition"
                       title="Dislike"
+                      aria-label="Dislike message"
                     >
                       <ThumbsDown size={16} />
                     </button>
@@ -190,23 +225,29 @@ export default function Chatbot({
                 )}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           <div className="p-3 border-t bg-white space-y-2">
             <div className="flex items-center rounded-full border focus-within:ring-2 focus-within:ring-blue-500 px-3 py-2">
               <input
+                type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 placeholder="Type your message or speak..."
                 className="flex-1 bg-transparent text-sm focus:outline-none px-2"
+                aria-label="Chat input"
               />
               <button
                 onClick={startListening}
                 title="Speak"
                 className={`p-2 rounded-full ${
-                  isListening ? "text-red-500 animate-pulse" : "text-gray-500 hover:text-blue-600"
+                  isListening
+                    ? "text-red-500 animate-pulse"
+                    : "text-gray-500 hover:text-blue-600"
                 }`}
+                aria-label="Start voice input"
               >
                 <Mic size={18} />
               </button>
@@ -214,6 +255,7 @@ export default function Chatbot({
                 onClick={sendMessage}
                 title="Send"
                 className="ml-2 p-2 text-blue-600 hover:text-blue-800"
+                aria-label="Send message"
               >
                 <SendHorizonal size={18} />
               </button>
@@ -234,3 +276,4 @@ export default function Chatbot({
     </div>
   );
 }
+
