@@ -1,6 +1,4 @@
-
-
- 'use client';
+'use client';
 
 import {
   CalendarIcon,
@@ -13,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { routeModule } from 'next/dist/build/templates/pages';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Chatbot {
   _id: string;
@@ -32,22 +30,13 @@ export default function ChatbotList({ chatbots }: { chatbots: Chatbot[] }) {
 
   const handleDeleteChatbot = async (botId: string) => {
     if (!confirm('Are you sure you want to delete this chatbot?')) return;
-
     setDeletingId(botId);
-
     try {
-      const res = await fetch(`/api/chatbots/${botId}`, {
-        method: 'DELETE',
-      });
-
-      if (!res.ok) {
-        throw new Error('Failed to delete chatbot');
-      }
-
-      // Refresh the page or revalidate data
+      const res = await fetch(`/api/chatbots/${botId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Failed to delete chatbot');
       router.refresh();
     } catch (error) {
-      console.error('Error deleting chatbot:', error);
+      console.error(error);
       alert('Failed to delete chatbot');
     } finally {
       setDeletingId(null);
@@ -68,14 +57,10 @@ export default function ChatbotList({ chatbots }: { chatbots: Chatbot[] }) {
     try {
       const res = await fetch(`/api/chatbots/${editedBot?._id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editedBot),
       });
-
       if (!res.ok) throw new Error('Failed to update chatbot');
-
       setEditingBot(null);
       setEditedBot(null);
       router.refresh();
@@ -86,45 +71,48 @@ export default function ChatbotList({ chatbots }: { chatbots: Chatbot[] }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-        <StatCard icon={<MessageCircleIcon className="w-6 h-6 text-blue-600 bg-blue-100" />} value="0" label="Replies-Today" />
-        <StatCard icon={<Clock3Icon className="w-6 h-6 text-green-600" />} value="3" label="Replies-This Month" />
-        <StatCard icon={<Clock3Icon className="w-6 h-6 text-purple-600" />} value="6" label="Replies-Last 90 Days" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard icon={<MessageCircleIcon className="w-6 h-6 text-blue-600" />} value="0" label="Replies Today" />
+        <StatCard icon={<Clock3Icon className="w-6 h-6 text-green-600" />} value="3" label="Replies This Month" />
+        <StatCard icon={<Clock3Icon className="w-6 h-6 text-purple-600" />} value="6" label="Replies in 90 Days" />
         <StatCard icon={<ThumbsDownIcon className="w-6 h-6 text-red-600" />} value="0" label="Down-Ratings" />
       </div>
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-4">
-        <h1 className="text-4xl font-bold text-blue-800">🤖 My Chatbots</h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">🤖 My Chatbots</h1>
       </div>
 
       {/* No Chatbots */}
       {chatbots.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center py-32 bg-gray-50 rounded-xl shadow-inner border border-dashed border-gray-300">
-          <p className="text-2xl text-blue-800 mb-4">🚫 No chatbots created yet.</p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center p-20 rounded-3xl border-2 border-dashed border-gray-300 bg-gray-50"
+        >
+          <p className="text-xl font-medium text-gray-700">🚫 You haven’t created any chatbots yet.</p>
+          <p className="text-gray-500 mt-2">Create a new chatbot to get started.</p>
+        </motion.div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
           {chatbots.slice(0, MAX_CHATBOTS).map((bot) => (
-            <div
+            <motion.div
+              layout
               key={bot._id}
-              className="group bg-white border border-gray-200 rounded-2xl shadow-sm p-6 transition hover:shadow-lg hover:border-blue-500"
+              whileHover={{ scale: 1.02 }}
+              className="bg-white border border-gray-200 rounded-2xl shadow-md p-6 transition-all"
             >
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold text-gray-900 group-hover:text-blue-600 transition">
-                    {bot.name}
-                  </h2>
-                  <span className="text-sm text-gray-500 flex items-center gap-1">
+                  <h2 className="text-2xl font-semibold text-gray-900">{bot.name}</h2>
+                  <span className="text-xs text-gray-500 flex items-center gap-1">
                     <CalendarIcon className="w-4 h-4" />
                     {new Date(bot.createdAt).toLocaleDateString()}
                   </span>
                 </div>
-
-                <p className="text-sm text-gray-500">{bot.language}</p>
-
+                <p className="text-sm text-gray-600">{bot.language}</p>
                 <a
                   href={bot.url}
                   target="_blank"
@@ -134,95 +122,89 @@ export default function ChatbotList({ chatbots }: { chatbots: Chatbot[] }) {
                   {bot.url}
                 </a>
               </div>
-
-              <div className="mt-6 flex gap-4">
+              <div className="mt-6 flex gap-3">
                 <button
                   onClick={() => handleDeleteChatbot(bot._id)}
-                  className="inline-flex items-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-800 transition disabled:opacity-50"
+                  className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
                   disabled={deletingId === bot._id}
                 >
-                  <TrashIcon className="w-4 h-4" />
-                  {deletingId === bot._id ? 'Deleting...' : 'Delete Chatbot'}
+                  <TrashIcon className="inline-block w-4 h-4 mr-1" />
+                  {deletingId === bot._id ? 'Deleting...' : 'Delete'}
                 </button>
                 <button
                   onClick={() => handleEditClick(bot)}
-                  className="inline-flex items-center gap-2 bg-gray-100 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition"
+                  className="bg-gray-100 hover:bg-gray-200 text-sm text-gray-800 font-medium px-4 py-2 rounded-lg transition"
                 >
-                  <PencilIcon className="w-4 h-4" />
-                  Edit Chatbot
+                  <PencilIcon className="inline-block w-4 h-4 mr-1" />
+                  Edit
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       )}
 
       {/* Edit Modal */}
-      {editingBot && editedBot && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 relative">
-            <button
-              onClick={() => setEditingBot(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+      <AnimatePresence>
+        {editingBot && editedBot && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white w-full max-w-lg rounded-2xl p-6 relative shadow-xl"
             >
-              <XIcon className="w-5 h-5" />
-            </button>
-            <h2 className="text-2xl font-bold mb-4 text-gray-900">Edit Chatbot</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                  name="name"
-                  value={editedBot.name}
-                  onChange={handleEditChange}
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">URL</label>
-                <input
-                  name="url"
-                  value={editedBot.url}
-                  onChange={handleEditChange}
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Language</label>
-                <input
-                  name="language"
-                  value={editedBot.language}
-                  onChange={handleEditChange}
-                  className="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                />
+              <button
+                onClick={() => setEditingBot(null)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              >
+                <XIcon className="w-5 h-5" />
+              </button>
+              <h2 className="text-2xl font-bold mb-4">Edit Chatbot</h2>
+              <div className="space-y-4">
+                {['name', 'url', 'language'].map((field) => (
+                  <div key={field}>
+                    <label className="block text-sm font-medium text-gray-700 capitalize">{field}</label>
+                    <input
+                      name={field}
+                      value={(editedBot as any)[field]}
+                      onChange={handleEditChange}
+                      className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                ))}
               </div>
               <div className="flex justify-end gap-2 mt-6">
                 <button
                   onClick={() => setEditingBot(null)}
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200"
+                  className="px-4 py-2 rounded-lg text-sm text-gray-600 bg-gray-100 hover:bg-gray-200"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSaveEdit}
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                  className="px-4 py-2 rounded-lg text-sm text-white bg-blue-600 hover:bg-blue-700"
                 >
                   Save Changes
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-// StatCard Component
 function StatCard({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 flex items-center gap-4 transition hover:shadow-md">
-      <div className="p-2 bg-gray-100 rounded-full">{icon}</div>
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 flex items-center gap-4 hover:shadow-md transition-all">
+      <div className="p-2 bg-blue-100 rounded-full">{icon}</div>
       <div>
         <p className="text-xl font-bold text-gray-900">{value}</p>
         <p className="text-sm text-gray-500">{label}</p>
@@ -230,4 +212,3 @@ function StatCard({ icon, value, label }: { icon: React.ReactNode; value: string
     </div>
   );
 }
-
