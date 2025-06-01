@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import {
@@ -17,7 +17,7 @@ import ChatbotModal from '../components/ChatbotModal';
 import ChatbotList from '../components/ChatbotList';
 import ModernSpinner from '../components/ModernSpinner';
 
-interface Chatbot {  
+interface Chatbot {
   _id: string;
   name: string;
   url: string;
@@ -40,7 +40,7 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => setInitialLoading(false), 2500);
+    const timer = setTimeout(() => setInitialLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -53,8 +53,8 @@ export default function Dashboard() {
     if (!token) return router.push('/login');
 
     try {
-      const decoded = jwt.decode(token) as any;
-      if (!decoded?.email) throw new Error();
+      const decoded = jwt.decode(token) as { email?: string };
+      if (!decoded?.email) throw new Error('Invalid token');
       setEmail(decoded.email);
     } catch {
       router.push('/login');
@@ -69,11 +69,14 @@ export default function Dashboard() {
         const token = localStorage.getItem('token');
         const res = await fetch('/api/chatbots', {
           method: 'GET',
-          headers: { 'Authorization': `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
-        if (res.ok) setChatbots(await res.json());
+        if (res.ok) {
+          const data = await res.json();
+          setChatbots(data);
+        }
       } catch (err) {
-        console.error('Error fetching chatbots:', err);
+        console.error('Failed to fetch chatbots:', err);
       }
     };
     fetchChatbots();
@@ -95,35 +98,31 @@ export default function Dashboard() {
   };
 
   const handleChatbotSuccess = (newChatbot: Chatbot) => {
-    setChatbots([...chatbots, newChatbot]);
+    setChatbots(prev => [...prev, newChatbot]);
     setIsModalOpen(false);
   };
 
-  const toggleSidebarCollapse = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
-  };
+  const toggleSidebarCollapse = () => setIsSidebarCollapsed(prev => !prev);
 
   const handleFeatureClick = (id: string) => {
     setIsLoading(true);
     setTimeout(() => {
       setSelectedFeature(id);
       setIsLoading(false);
-    }, 1000);
+    }, 600);
     if (!isDesktop) setIsSidebarOpen(false);
   };
 
   const renderWelcome = () => (
     <div className="flex flex-col items-center justify-center h-full bg-white rounded-xl p-10 shadow-md animate-fade-in text-center">
       <div className="text-6xl mb-4">🤖</div>
-      <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-blue-600">
-        Welcome to Talksy AI
-      </h1>
+      <h1 className="text-4xl font-bold text-blue-700">Welcome to Talksy AI</h1>
       <p className="mt-4 text-gray-600 max-w-xl">
         Build intelligent, no-code AI chatbots in seconds. Click below to get started.
       </p>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="mt-6 px-6 py-3 rounded-full text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition shadow-xl"
+        className="mt-6 px-6 py-3 rounded-full text-white bg-blue-600 hover:bg-blue-700 transition shadow-lg"
       >
         🚀 Let's Build Your Bot
       </button>
@@ -133,43 +132,47 @@ export default function Dashboard() {
   const renderFeature = () => {
     if (isLoading) return <ModernSpinner />;
     switch (selectedFeature) {
-      case 'add-website': return chatbots.length > 0 ? <ChatbotList chatbots={chatbots} /> : renderWelcome();
-      case 'knowledge-base': return <KnowledgeBase email={email} />;
-      case 'upload-files': return <UploadFiles />;
-      case 'customize-chatbot': return <CustomizeChatbot  />;
-      case 'analytics': return <Analytics  />;
-      case 'embed-code': return <EmbedCode  />;
-      default: return renderWelcome();
+      case 'add-website':
+        return chatbots.length > 0 ? <ChatbotList chatbots={chatbots} /> : renderWelcome();
+      case 'knowledge-base':
+        return <KnowledgeBase email={email} />;
+      case 'upload-files':
+        return <UploadFiles />;
+      case 'customize-chatbot':
+        return <CustomizeChatbot />;
+      case 'analytics':
+        return <Analytics />;
+      case 'embed-code':
+        return <EmbedCode />;
+      default:
+        return renderWelcome();
     }
   };
 
   const features = [
-    { title: 'Add Website', id: 'add-website', icon: <FiPlus /> },
+    { title: 'Home', id: 'add-website', icon: <FiPlus /> },
     { title: 'Knowledge Base', id: 'knowledge-base', icon: <FiBookOpen /> },
     { title: 'Upload Files', id: 'upload-files', icon: <FiUpload /> },
     { title: 'Customize Chatbot', id: 'customize-chatbot', icon: <FiSettings /> },
     { title: 'Analytics', id: 'analytics', icon: <FiBarChart2 /> },
-    { title: 'Embed Code', id: 'embed-code', icon: <FiCode /> }
+    { title: 'Embed Code', id: 'embed-code', icon: <FiCode /> },
   ];
 
   const sidebarContent = (
-    <div className={`flex flex-col h-full bg-gradient-to-b from-blue-950 to-blue-900 text-white transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'} shadow-2xl`}>
-      <div className="flex items-center justify-between p-4 border-b border-blue-800 sticky top-0 bg-blue-950 z-10">
-        {!isSidebarCollapsed ? (
-          <h2 className="text-2xl font-bold tracking-tight">💬Talksy</h2>
-        ) : (
-          <span className="text-xl font-bold">T</span>
-        )}
+    <div className={`flex flex-col h-full bg-gradient-to-b from-blue-800 to-blue-900 text-white transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'} shadow-2xl`}>
+      <div className="flex items-center justify-between p-4 border-b border-blue-700 bg-blue-900 sticky top-0 z-10">
+        <h2 className="text-lg font-bold">{isSidebarCollapsed ? 'T' : '💬 Talksy'}</h2>
         <button onClick={toggleSidebarCollapse} className="hover:text-blue-300">
           {isSidebarCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
         </button>
       </div>
-      <ul className="mt-4 space-y-1">
+
+      <ul className="mt-6 space-y-1">
         {features.map(({ title, id, icon }) => (
           <li
             key={id}
             onClick={() => handleFeatureClick(id)}
-            className={`flex items-center gap-3 px-4 py-2 text-sm font-medium cursor-pointer rounded-lg transition hover:bg-blue-800 hover:text-white ${
+            className={`flex items-center gap-3 px-4 py-2 text-sm font-medium cursor-pointer rounded-lg transition hover:bg-blue-700 ${
               selectedFeature === id ? 'bg-blue-700 text-white' : 'text-blue-200'
             }`}
           >
@@ -178,41 +181,31 @@ export default function Dashboard() {
           </li>
         ))}
       </ul>
-      <div className="mt-10 p-4 border-t border-blue-800" ref={dropdownRef}>
-{!isSidebarCollapsed ? (
-  <div className="relative">
-    <button
-      onClick={() => setShowDropdown(!showDropdown)}
-      className="text-sm w-full text-left truncate hover:text-blue-200"
-    >       
-      {email}
-    </button>
-    {showDropdown && (
-      <div className="absolute bottom-full right-0 mb-2 bg-white text-black border shadow-lg rounded-md z-50 w-48">
-        <div className="px-4 py-2 text-sm text-gray-500 border-b">Signed in as</div>
-        <div className="px-4 py-2 text-sm truncate font-medium text-blue-600 border-b">
-          {email}
-        </div>
-        <button
-          onClick={handleLogout}
-          className="w-full px-4 py-2 flex items-center gap-2 text-red-600 hover:bg-gray-100"
-        >
-          <FiLogOut /> Logout
-        </button>
-      </div>
-    )}
-  </div>
-) : (
-  <button
-    onClick={handleLogout}
-    className="w-full flex justify-center hover:text-red-400"
-    title="Logout"
-  >
-    <FiLogOut size={20} />
-  </button>
-)}
 
-
+      <div className="mt-auto p-4 border-t border-blue-700" ref={dropdownRef}>
+        {!isSidebarCollapsed ? (
+          <div className="relative">
+            <button onClick={() => setShowDropdown(!showDropdown)} className="text-sm w-full text-left truncate hover:text-blue-300">
+              {email}
+            </button>
+            {showDropdown && (
+              <div className="absolute bottom-full right-0 mb-2 bg-white text-black border shadow-md rounded-lg z-50 w-52">
+                <div className="px-4 py-2 text-sm text-gray-500 border-b">Signed in as</div>
+                <div className="px-4 py-2 text-sm truncate font-medium text-blue-600 border-b">{email}</div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full px-4 py-2 flex items-center gap-2 text-red-600 hover:bg-gray-100"
+                >
+                  <FiLogOut /> Logout
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button onClick={handleLogout} className="w-full flex justify-center hover:text-red-400" title="Logout">
+            <FiLogOut size={20} />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -220,10 +213,10 @@ export default function Dashboard() {
   if (initialLoading) return <ModernSpinner />;
 
   return (
-    <div className="flex h-screen bg-gray-100 overflow-hidden relative">
+    <div className="flex h-screen overflow-hidden bg-white text-gray-800">
       {!isDesktop && (
         <button
-          className="absolute top-4 left-4 z-50 bg-white p-2 shadow rounded-full md:hidden"
+          className="absolute top-4 left-4 z-50 bg-white border border-gray-300 p-2 rounded-full shadow-md md:hidden"
           onClick={() => setIsSidebarOpen(true)}
         >
           <FiMenu />
@@ -233,10 +226,7 @@ export default function Dashboard() {
       {(isDesktop || isSidebarOpen) && (
         <>
           {!isDesktop && (
-            <div
-              className="fixed inset-0 bg-black/40 z-40"
-              onClick={() => setIsSidebarOpen(false)}
-            />
+            <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsSidebarOpen(false)} />
           )}
           <aside className={`fixed md:static z-50 h-full ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}>
             {sidebarContent}
@@ -244,7 +234,7 @@ export default function Dashboard() {
         </>
       )}
 
-      <main className="flex-1 overflow-y-auto p-6 md:p-10 bg-gray-50 transition-all duration-300">
+      <main className="flex-1 h-full overflow-y-auto px-6 py-6 bg-white">
         {renderFeature()}
         <ChatbotModal
           isOpen={isModalOpen}
