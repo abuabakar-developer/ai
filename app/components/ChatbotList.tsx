@@ -92,7 +92,7 @@ export default function ChatbotList({ chatbots }: { chatbots: Chatbot[] }) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center p-20 rounded-3xl border-2 border-dashed border-gray-300 bg-gray-50"
         >
-          <p className="text-xl font-medium text-gray-700">🚫 You haven’t created any chatbots yet.</p>
+          <p className="text-xl font-medium text-gray-800">🚫 You haven’t created any chatbots yet.</p>
           <p className="text-gray-500 mt-2">Create a new chatbot to get started.</p>
         </motion.div>
       ) : (
