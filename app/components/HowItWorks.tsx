@@ -41,7 +41,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="bg-white py-24 px-6 sm:px-10 lg:px-24 overflow-hidden">
+    <section className="bg-white py-24 px-6 sm:px-10 font-sans lg:px-24 overflow-hidden">
       <div className="max-w-7xl mx-auto relative">
         <motion.h2
           initial={{ opacity: 0, y: -30 }}
@@ -83,7 +83,7 @@ const HowItWorks = () => {
                 </div>
 
                 <h3 className="text-2xl font-semibold text-gray-900 mb-3">{step.title}</h3>
-                <p className="text-gray-700 text-md font-sans font-medium leading-relaxed">{step.description}</p>
+                <p className="text-gray-700 text-md font-medium leading-relaxed">{step.description}</p>
               </motion.div>
             );
           })}
@@ -114,7 +114,7 @@ const HowItWorks = () => {
                   </div>
 
                   <h3 className="text-xl font-semibold text-gray-900 mb-3">{step.title}</h3>
-                  <p className="text-gray-700 text-base leading-relaxed">{step.description}</p>
+                  <p className="text-gray-700 text-md font-medium leading-relaxed">{step.description}</p>
                 </div>
               </motion.div>
             );
