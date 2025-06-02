@@ -158,57 +158,73 @@ export default function Dashboard() {
     { title: 'Embed Code', id: 'embed-code', icon: <FiCode /> },
   ];
 
-  const sidebarContent = (
-    <div className={`flex flex-col h-full bg-gradient-to-b from-blue-800 to-blue-900 text-white transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'} shadow-2xl`}>
-      <div className="flex items-center justify-between p-4 border-b border-blue-700 bg-blue-900 sticky top-0 z-10">
-        <h2 className="text-lg font-bold">{isSidebarCollapsed ? 'T' : '💬 Talksy'}</h2>
-        <button onClick={toggleSidebarCollapse} className="hover:text-blue-300">
-          {isSidebarCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
-        </button>
-      </div>
-
-      <ul className="mt-6 space-y-1">
-        {features.map(({ title, id, icon }) => (
-          <li
-            key={id}
-            onClick={() => handleFeatureClick(id)}
-            className={`flex items-center gap-3 px-4 py-2 text-sm font-medium cursor-pointer rounded-lg transition hover:bg-blue-700 ${
-              selectedFeature === id ? 'bg-blue-700 text-white' : 'text-blue-200'
-            }`}
-          >
-            <span>{icon}</span>
-            {!isSidebarCollapsed && <span>{title}</span>}
-          </li>
-        ))}
-      </ul>
-
-      <div className="mt-auto p-4 border-t border-blue-700" ref={dropdownRef}>
-        {!isSidebarCollapsed ? (
-          <div className="relative">
-            <button onClick={() => setShowDropdown(!showDropdown)} className="text-sm w-full text-left truncate hover:text-blue-300">
-              {email}
-            </button>
-            {showDropdown && (
-              <div className="absolute bottom-full right-0 mb-2 bg-white text-black border shadow-md rounded-lg z-50 w-52">
-                <div className="px-4 py-2 text-sm text-gray-500 border-b">Signed in as</div>
-                <div className="px-4 py-2 text-sm truncate font-medium text-blue-600 border-b">{email}</div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full px-4 py-2 flex items-center gap-2 text-red-600 hover:bg-gray-100"
-                >
-                  <FiLogOut /> Logout
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <button onClick={handleLogout} className="w-full flex justify-center hover:text-red-400" title="Logout">
-            <FiLogOut size={20} />
-          </button>
-        )}
-      </div>
+const sidebarContent = (
+  <div
+    className={`flex flex-col h-full bg-gradient-to-b from-blue-800 to-blue-900 text-white transition-all duration-300 ${
+      isSidebarCollapsed ? 'w-20' : 'w-64'
+    } shadow-2xl`}
+  >
+    {/* Header */}
+    <div className="flex items-center justify-between p-4 border-b border-blue-700 bg-blue-900 sticky top-0 z-10">
+      <h2 className="text-lg font-bold">{isSidebarCollapsed ? 'T' : '💬 Talksy'}</h2>
+      <button onClick={toggleSidebarCollapse} className="hover:text-blue-300">
+        {isSidebarCollapsed ? <FiChevronRight /> : <FiChevronLeft />}
+      </button>
     </div>
-  );
+
+    {/* Feature List */}
+    <ul className="mt-6 space-y-1 flex-1 overflow-y-auto">
+      {features.map(({ title, id, icon }) => (
+        <li
+          key={id}
+          onClick={() => handleFeatureClick(id)}
+          className={`flex items-center gap-3 px-4 py-2 text-sm font-medium cursor-pointer rounded-lg transition hover:bg-blue-700 ${
+            selectedFeature === id ? 'bg-blue-700 text-white' : 'text-blue-200'
+          }`}
+        >
+          <span>{icon}</span>
+          {!isSidebarCollapsed && <span>{title}</span>}
+        </li>
+      ))}
+    </ul>
+
+    {/* Bottom Email + Logout Section */}
+    <div className="border-t border-blue-700 p-4 pb-14 bg-blue-900" ref={dropdownRef}>
+      {!isSidebarCollapsed ? (
+        <div className="relative">
+          <button
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="text-sm w-full text-left truncate hover:text-blue-300"
+          >
+            {email}
+          </button>
+          {showDropdown && (
+            <div className="absolute bottom-full right-0 mb-2 bg-white text-black border shadow-md rounded-lg z-50 w-52">
+              <div className="px-4 py-2 text-sm text-gray-500 border-b">Signed in as</div>
+              <div className="px-4 py-2 text-sm truncate font-medium text-blue-600 border-b">{email}</div>
+              <button
+                onClick={handleLogout}
+                className="w-full px-4 py-2 flex items-center gap-2 text-red-600 hover:bg-gray-100"
+              >
+                <FiLogOut /> Logout
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <button
+          onClick={handleLogout}
+          className="w-full flex justify-center hover:text-red-400"
+          title="Logout"
+        >
+          <FiLogOut size={20} />
+        </button>
+      )}
+    </div>
+  </div>
+);
+
+
 
   if (initialLoading) return <ModernSpinner />;
 
