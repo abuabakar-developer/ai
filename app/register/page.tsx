@@ -50,7 +50,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white px-4">
+    <div className="flex min-h-screen font-sans items-center justify-center bg-white px-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-10 space-y-6">
         <h2 className="text-3xl font-extrabold text-center text-gray-800">
           Register for Talksy

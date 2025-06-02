@@ -38,7 +38,7 @@ const sections = [
 
 const ComparisonTable = () => {
   return (
-    <div className="bg-gray-50 px-4 py-16 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 px-4 font-sans py-16 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center text-gray-900 mb-6 sm:font-semibold">
           AI Chatbot Pricing Comparison Plans

@@ -113,16 +113,22 @@ export default function HeroSection() {
       </div>
 
       {/* Hero Image */}
-      <div className="max-w-7xl mx-auto mt-16">
-        <div className="relative w-full h-[75vh] sm:h-[85vh] md:h-[90vh] rounded-3xl overflow-hidden border border-gray-200">
-<Image
-  src={heroData.imageUrl} // update path as needed
-  alt="Chatbot Dashboard"
-  width={1400}
-  height={800}
-  className="w-full max-w-[1400px] mx-auto h-auto object-contain md:px-6 lg:px-12"
-/>
-
+      <div className="max-w-7xl mx-auto mt-10 sm:mt-16 px-4">
+        <div
+          className="relative w-full overflow-hidden 
+          border-b-4 border-gray-300 sm:rounded-3xl sm:border sm:border-gray-200"
+        >
+          {/* Wrapper for clipping the bottom 10% on large screens */}
+          <div className="w-full overflow-hidden sm:max-h-[720px] lg:max-h-[720px] lg:h-[90%]">
+            <Image
+              src={heroData.imageUrl}
+              alt="Chatbot Dashboard"
+              width={1400}
+              height={800}
+              priority
+              className="w-full h-auto object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>

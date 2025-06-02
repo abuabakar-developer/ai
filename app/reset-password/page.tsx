@@ -35,7 +35,7 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
+    <div className="min-h-screen flex font-sans items-center justify-center bg-white px-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 space-y-6">
         <h2 className="text-3xl font-bold text-center text-gray-800">Reset Your Password</h2>
         <p className="text-sm text-gray-500 text-center">

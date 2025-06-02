@@ -34,7 +34,7 @@ export default function ConfirmContent() {
   const handleBack = () => router.back();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-gray-100 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen font-sans bg-gradient-to-br from-white via-slate-50 to-gray-100 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 border border-gray-200">
         <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">Confirm Your Meeting</h1>
         {selectedDate && (

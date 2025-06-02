@@ -21,7 +21,7 @@ export default function UserDetailsForm({ onConfirm }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 font-sans">
       <div>
         <label className="block text-sm font-medium text-gray-700">First Name</label>
         <input

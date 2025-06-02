@@ -155,7 +155,7 @@ export default function Chatbot({
   };
 
   return (
-    <div className="fixed z-50 text-3xl">
+    <div className="fixed z-50 font-sans text-3xl">
       {showIcon && !isOpen ? (
         <button
           onClick={() => setIsOpen(true)}

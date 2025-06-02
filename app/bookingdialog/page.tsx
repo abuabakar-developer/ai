@@ -62,7 +62,7 @@ export default function BookingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center font-sans justify-center bg-white">
         <div className="flex flex-col items-center space-y-4">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-gray-900 font-semibold">Preparing your booking experience...</p>
@@ -72,7 +72,7 @@ export default function BookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-gray-200 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br font-sans from-white via-slate-100 to-gray-200 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col lg:flex-row shadow-2xl border border-gray-300 rounded-lg overflow-hidden">
           <div className="bg-gradient-to-br from-blue-800 via-blue-950 to-blue-900 text-white p-6 sm:p-8 lg:w-1/2">

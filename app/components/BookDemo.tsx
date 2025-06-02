@@ -24,7 +24,7 @@ const BookDemo = () => {
   };
 
   return (
-    <section className="min-h-screen bg-white py-20 px-6 flex items-center justify-center">
+    <section className="min-h-screen font-sans bg-white py-20 px-6 flex items-center justify-center">
       <div className="w-full max-w-7xl mx-auto grid lg:grid-cols-2 gap-12">
 
         {/* Left Side: Why Book a Demo */}

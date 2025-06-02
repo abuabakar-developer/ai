@@ -185,7 +185,7 @@ export default function PricingPage() {
   const [billing, setBilling] = useState<'yearly' | 'monthly'>('yearly');
 
   return (
-    <section className="bg-white py-20 px-4 sm:px-6 lg:px-20 min-h-screen">
+    <section className="bg-white py-20 px-4 font-sans sm:px-6 lg:px-20 min-h-screen">
       <div className="flex flex-col justify-start mb-10">
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 sm:font-semibold">
        Plans that fits your needs 

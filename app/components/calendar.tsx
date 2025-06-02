@@ -5,7 +5,7 @@ import 'react-day-picker/dist/style.css';
 
 export function Calendar({ selected, onSelect, month }: any) {
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full font-sans overflow-x-auto">
       <DayPicker
         mode="single"
         selected={selected}

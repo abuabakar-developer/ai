@@ -71,7 +71,7 @@ export default function ChatbotList({ chatbots }: { chatbots: Chatbot[] }) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
+    <div className="max-w-6xl font-sans mx-auto px-4 py-12 space-y-10">
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard icon={<MessageCircleIcon className="w-6 h-6 text-blue-600" />} value="0" label="Replies Today" />
