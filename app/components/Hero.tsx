@@ -27,7 +27,7 @@ const mockHeroData: HeroDataType = {
     href: '/bookingdialog',
   },
   highlights: ['No credit card required'],
-  imageUrl: '/dash.png',
+  imageUrl: '/dashboar.png',
 };
 
 export default function HeroSection() {
