@@ -65,6 +65,7 @@ export default function Analytics() {
   return (
     <div className="w-full px-4 py-10 min-h-screen font-sans bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-all duration-300">
       {/* Filters */}
+      <h1 className='text-3xl text-blue-800 font-bold justify-start ml-3'>Analytics</h1>
       <div className="flex justify-end mb-8 relative">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}

@@ -60,7 +60,7 @@ export default function UploadFiles() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 font-sans bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-      <h2 className="text-3xl font-extrabold text-gray-800 mb-6 text-center">Upload Knowledge Files</h2>
+      <h2 className="text-3xl font-extrabold text-blue-800 mb-6 text-center">Upload Knowledge Files</h2>
 
       <label className="flex flex-col items-center justify-center w-full h-52 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-2 border-dashed border-blue-400 hover:bg-blue-50 transition cursor-pointer">
         <FiUploadCloud className="text-blue-500 text-5xl mb-3" />

@@ -32,7 +32,7 @@ export default function CreateNewChatbot() {
   };
 
   return (
-    <section className="bg-blue-950 text-white font-sans rounded-md shadow-xl mx-4 sm:mx-6 md:mx-12 my-10 py-16 sm:py-20 text-center">
+    <section className="bg-blue-950 text-white font-sans rounded-3xl shadow-xl mx-4 sm:mx-6 md:mx-12 my-10 py-16 sm:py-20 text-center">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
         <h1 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
           Join future of <span className='text-blue-800'>AI chatbots </span>today
