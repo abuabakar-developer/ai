@@ -54,7 +54,7 @@ export default function CustomizeChatbot() {
   return (
     <section className="max-w-6xl mx-auto px-6 py-12 md:py-16 font-sans bg-gradient-to-br from-white to-gray-100 dark:from-[#0f172a] dark:to-[#1e293b] rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-700 transition-all">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
-        <h1 className="text-4xl font-black text-blue-800 dark:text-white tracking-tight">
+        <h1 className="text-3xl text-blue-800 font-bold dark:text-white tracking-tight">
           🤖 Customize Your Chatbot
         </h1>
         <button

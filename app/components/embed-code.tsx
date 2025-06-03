@@ -61,7 +61,7 @@ export default function EmbedCode() {
 
   return (
     <div className="bg-white shadow-md rounded-xl font-sans p-6 w-full max-w-4xl mx-auto border border-gray-200">
-      <h2 className="text-2xl font-bold mb-4 text-blue-800">Embed Code</h2>
+      <h2 className="text-3xl font-bold mb-4 text-blue-800">Embed Code</h2>
       <p className="text-gray-600 mb-6">
         Copy and paste this code into your website’s HTML to embed your chatbot.
       </p>
